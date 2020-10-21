@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: select-picture-by-time
+spec:
+  selector:
+    matchLabels:
+      app: select-picture-by-time
+  template:
+    metadata:
+      labels:
+        app: select-picture-by-time
+    spec:
+      containers:
+      - name: select-picture-by-time
+        imagePullPolicy: IfNotPresent
+        image: latonaio/select-picture-by-time:latest
+        command:
+          - /bin/sh
+          - -c
+          - "while :; do sleep 10; done"
+        env:
+          - name: SERVER_HOST
+            value: template-matching-server
+          - name: SERVER_PORT
+            value: "50052"
+          - name: CONNECTION_MODE
+            value: "direct"
+          - name: MYSQL_PASSWORD
+            value: latonalatona
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        volumeMounts:
+          - name: scripts
+            mountPath: /var/lib/aion/Runtime/select-picture-by-time
+      volumes:
+        - name: scripts
+          hostPath:
+            path: /home/latona/workspace/select-picture-by-time
